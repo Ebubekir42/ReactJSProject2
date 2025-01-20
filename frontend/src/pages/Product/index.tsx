@@ -1,10 +1,15 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, Children, useEffect, useState } from "react";
 import * as productService from "../../services/product.service";
 import * as categoryService from "../../services/category.service";
 import { useLocation } from "react-router-dom";
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../../src/App.css';
+import { DataGrid } from "@mui/x-data-grid";
+import DataTable from "../../components/DataGrid";
+import Resized from "../../components/Resized";
+import Resized2 from "../../components/Resized2";
+import Resized3 from "../../components/Resized3";
 
 interface Category {
   id: number;
@@ -451,6 +456,14 @@ const Product: React.FC = () => {
                   </table>
                   }
                   
+                </div>
+                <div>
+                  <DataTable/>
+                  <Resized defaultWidth={250}>
+                    <div></div>  
+                  </Resized>
+                  <Resized2/>
+                  <Resized3/>
                 </div>
               </div>
             </div>
