@@ -10,6 +10,7 @@ import DataTable from "../../components/DataGrid";
 import Resized from "../../components/Resized";
 import Resized2 from "../../components/Resized2";
 import Resized3 from "../../components/Resized3";
+import Resized4 from "../../components/Resized4";
 
 interface Category {
   id: number;
@@ -464,6 +465,7 @@ const Product: React.FC = () => {
                   </Resized>
                   <Resized2/>
                   <Resized3/>
+                  <Resized4/>
                 </div>
               </div>
             </div>
