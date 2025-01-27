@@ -11,6 +11,8 @@ import Resized from "../../components/Resized";
 import Resized2 from "../../components/Resized2";
 import Resized3 from "../../components/Resized3";
 import Resized4 from "../../components/Resized4";
+import Kendo from "../../components/Kendo";
+import Resized5 from "../../components/Resized5";
 
 interface Category {
   id: number;
@@ -459,13 +461,16 @@ const Product: React.FC = () => {
                   
                 </div>
                 <div>
-                  <DataTable/>
-                  <Resized defaultWidth={250}>
+                  {/* <DataTable/> */}
+                  {/* <Resized defaultWidth={250}>
                     <div></div>  
-                  </Resized>
-                  <Resized2/>
-                  <Resized3/>
+                  </Resized> */}
+                  {/* <Resized2/> */}
+                  {/* <Resized3/> */}
+                  <br/><br/>
                   <Resized4/>
+                  <Resized5/>
+                  {/* <Kendo/> */}
                 </div>
               </div>
             </div>

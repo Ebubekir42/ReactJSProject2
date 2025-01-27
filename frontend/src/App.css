@@ -18,3 +18,14 @@ body {
   box-shadow: none !important;
   border: 1px solid #ccc !important;
 }
+.react-resizable-handle{
+  background-image: none !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+.react-resizable-handle-e{
+  transform: rotate(0) !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  right: -9px !important;
+}
