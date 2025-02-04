@@ -29,3 +29,45 @@ body {
   margin-top: 0 !important;
   right: -9px !important;
 }
+
+.modal-content-wrapper {
+  padding: 20px;
+}
+
+.custom-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+
+
+
+.modal-center .modal-content-wrapper {
+  padding: 20px;
+}
+
+.modal-center .custom-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.modal-center.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.modal-center .modal-dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

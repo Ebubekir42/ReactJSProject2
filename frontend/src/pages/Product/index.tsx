@@ -13,6 +13,7 @@ import Resized3 from "../../components/Resized3";
 import Resized4 from "../../components/Resized4";
 import Kendo from "../../components/Kendo";
 import Resized5 from "../../components/Resized5";
+import Modal from "../../components/Modal";
 
 interface Category {
   id: number;
@@ -231,6 +232,8 @@ const Product: React.FC = () => {
   },[products, searhTerm, selectedCategory]);
 
   
+  const [isParentModalOpen, setParentModalOpen] = useState(false);
+  const [isNestedModalOpen, setNestedModalOpen] = useState(false);
 
 
   return (
@@ -468,9 +471,40 @@ const Product: React.FC = () => {
                   {/* <Resized2/> */}
                   {/* <Resized3/> */}
                   <br/><br/>
+                  <Resized3/>
                   <Resized4/>
                   <Resized5/>
-                  {/* <Kendo/> */}
+                  
+
+                      <div className="flex justify-center items-center h-screen">
+                        <button
+                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
+                          onClick={() => setParentModalOpen(true)}
+                        >
+                          Open Parent Modal
+                        </button>
+                  
+                        {isParentModalOpen && (
+                          <Modal onClose={() => setParentModalOpen(false)}>
+                            <h2 className="text-xl font-bold">Parent Modal</h2>
+                            <p>This is the parent modal. You can open a nested modal.</p>
+                            <button
+                              className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-800"
+                              onClick={() => setNestedModalOpen(true)}
+                            >
+                              Open Nested Modal
+                            </button>
+                  
+                            {isNestedModalOpen && (
+                              <Modal onClose={() => setNestedModalOpen(false)}>
+                                <h2 className="text-xl font-bold">Nested Modal</h2>
+                                <p>This is the nested modal. You can close both modals by clicking outside.</p>
+                              </Modal>
+                            )}
+                          </Modal>
+                        )}
+                      </div>
+  
                 </div>
               </div>
             </div>

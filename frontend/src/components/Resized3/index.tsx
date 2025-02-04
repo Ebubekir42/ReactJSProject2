@@ -1,75 +1,64 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 
 type Column = {
   id: string;
   label: string;
-  width: number; // px
+  width: number;
+  minWidth: number;
+  maxWidth: number;
 };
 
 const Resized3: React.FC = () => {
-  const [columns, setColumns] = useState<Column[]>([
-    { id: "col1", label: "Column 1", width: 150 },
-    { id: "col2", label: "Column 2", width: 200 },
-    { id: "col3", label: "Column 3", width: 250 },
-  ]);
+  const tableWidth = 800; // Tablo genişliği
+  const initialColumns: Column[] = [
+    { id: "col1", label: "Column 1", width: 200, minWidth: 100, maxWidth: 300 },
+    { id: "col2", label: "Column 2", width: 200, minWidth: 100, maxWidth: 300 },
+    { id: "col3", label: "Column 3", width: 200, minWidth: 100, maxWidth: 300 },
+    { id: "col4", label: "Column 4", width: 200, minWidth: 100, maxWidth: 300 },
+  ];
 
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-  const filterIconRef = useRef<HTMLDivElement | null>(null);
+  const [columns, setColumns] = useState<Column[]>(initialColumns);
 
-  const handleResize = (id: string, newWidth: number) => {
-    setColumns((prevColumns) =>
-      prevColumns.map((col) =>
-        col.id === id ? { ...col, width: newWidth } : col
-      )
-    );
-  };
+  const totalColumnWidth = columns.reduce((sum, col) => sum + col.width, 0);
 
-  const handleFilterClick = () => {
-    if (filterIconRef.current) {
-      const rect = filterIconRef.current.getBoundingClientRect();
-      setDropdownPosition({ top: rect.bottom, left: rect.left });
-      setDropdownVisible((prev) => !prev);
-    }
-  };
-
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (!filterIconRef.current?.contains(event.target as Node)) {
-      setDropdownVisible(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+  // Genişlik taşmasını engelle
+  const adjustedColumns = totalColumnWidth > tableWidth 
+    ? columns.map((col) => ({
+        ...col,
+        width: (col.width / totalColumnWidth) * tableWidth,
+      }))
+    : columns;
 
   return (
     <div
       style={{
-        overflowX: "auto",
+        overflowX: "hidden",
         border: "1px solid #ccc",
-        maxWidth: "100%",
+        maxWidth: `${tableWidth}px`,
         position: "relative",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", minWidth: "fit-content" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {/* Header */}
-        <div style={{ display: "flex", backgroundColor: "#f5f5f5" }}>
-          {columns.map((column, index) => (
+        <div style={{ display: "flex", backgroundColor: "rgb(224,224,224)" }}>
+          {adjustedColumns.map((column) => (
             <ResizableBox
               key={column.id}
               width={column.width}
               height={40}
               axis="x"
               resizeHandles={["e"]}
-              minConstraints={[50, 40]}
-              maxConstraints={[500, 40]}
-              onResizeStop={(e, data) => handleResize(column.id, data.size.width)}
+              minConstraints={[column.minWidth, 40]}
+              maxConstraints={[column.maxWidth, 40]}
+              onResizeStop={(e, data) =>
+                setColumns((prevColumns) =>
+                  prevColumns.map((col) =>
+                    col.id === column.id ? { ...col, width: data.size.width } : col
+                  )
+                )
+              }
             >
               <div
                 style={{
@@ -81,7 +70,6 @@ const Resized3: React.FC = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                 
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -89,38 +77,28 @@ const Resized3: React.FC = () => {
                 }}
               >
                 {column.label}
-                {index === 1 && (
-                  <div
-                    ref={filterIconRef}
-                    style={{
-                      width: 16,
-                      height: 16,
-                      backgroundColor: "blue",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      position: "absolute",
-                      right: 20,
-                    }}
-                    onClick={handleFilterClick}
-                  ></div>
-                )}
               </div>
             </ResizableBox>
           ))}
         </div>
+
         {/* Body */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           {[1, 2, 3].map((row, rowIndex) => (
-            <div key={rowIndex} style={{ display: "flex" }}>
-              {columns.map((column) => (
+            <div
+              key={rowIndex}
+              style={{
+                display: "flex",
+                borderBottom: "1px solid rgb(204,204,204)",
+              }}
+            >
+              {adjustedColumns.map((column) => (
                 <div
                   key={column.id}
                   style={{
                     width: column.width,
                     padding: "8px",
                     boxSizing: "border-box",
-                    borderRight: "1px solid #ccc",
-                    borderBottom: "1px solid #ccc",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -133,25 +111,6 @@ const Resized3: React.FC = () => {
           ))}
         </div>
       </div>
-      {/* Dropdown */}
-      {dropdownVisible && (
-        <div
-          style={{
-            position: "absolute",
-            top: dropdownPosition.top - 400,
-            left: dropdownPosition.left - 400,
-            backgroundColor: "white",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-            border: "1px solid #ccc",
-            padding: "8px",
-            zIndex: 1000,
-          }}
-        >
-          <div>Filter Option 1</div>
-          <div>Filter Option 2</div>
-          <div>Filter Option 3</div>
-        </div>
-      )}
     </div>
   );
 };
