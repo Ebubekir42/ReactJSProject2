@@ -5,17 +5,15 @@ import "react-resizable/css/styles.css";
 type Column = {
   id: string;
   label: string;
-  width: number; // px
   minWidth: number; // px
-  maxWidth: number; // px
 };
 
-const Resized4: React.FC = () => {
+const Resized5: React.FC = () => {
   const [columns, setColumns] = useState<Column[]>([
-    { id: "col1", label: "Column 1", width: 150, minWidth: 100, maxWidth: 300 },
-    { id: "col2", label: "Column 2", width: 200, minWidth: 100, maxWidth: 300 },
-    { id: "col3", label: "Column 3", width: 200, minWidth: 100, maxWidth: 300 },
-    { id: "col4", label: "Column 4", width: 250, minWidth: 100, maxWidth: 300 },
+    { id: "col1", label: "Column 1",  minWidth: 100},
+    { id: "col2", label: "Column 2",  minWidth: 100},
+    { id: "col3", label: "Column 3",  minWidth: 100},
+    { id: "col4", label: "Column 4",  minWidth: 100},
   ]);
 
   const [filters1, setFilters1] = useState<string[]>([]);
@@ -92,181 +90,95 @@ const Resized4: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <div
-        style={{
-          overflowX: "auto",
-          border: "1px solid #ccc",
-          maxWidth: "100%",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            minWidth: "fit-content",
-          }}
-        >
-          {/* Header */}
-          <div style={{ display: "flex", backgroundColor: "rgb(224,224,224)" }}>
-            {columns.map((column) => (
-              <ResizableBox
-                key={column.id}
-                width={column.width}
-                height={40}
-                axis="x"
-                resizeHandles={["e"]}
-                minConstraints={[column.minWidth, 40]}
-                maxConstraints={[column.maxWidth, 40]}
-                onResizeStop={(e, data) => handleResize(column.id, data.size.width)}
+    <div style={{ overflowX: "auto", border: "1px solid #ccc" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "auto" }}>
+        <thead>
+          <tr style={{ backgroundColor: "#e0e0e0" }}>
+            {columns.map((col) => (
+              <th
+                key={col.id}
+                style={{
+                  position: "relative",
+                  padding: "8px 40px 8px 8px",
+                  minWidth: `${col.minWidth}px`,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  borderRight: "1px solid #ccc",
+                  textAlign: "left",
+                }}
               >
-                <div
+                {col.label}
+                {/* Filtre ikonu */}
+                <span
                   style={{
-                    width: "100%",
-                    height: "100%",
+                    position: "absolute",
+                    top: "50%",
+                    right: "24px",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg
+                    width={16}
+                    height={16}
+                    fill="#555"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                  >
+                    <path d="M3.9 54.9C10.5 40.9 24.5 32 40 32l432 0c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9 320 448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6l0-79.1L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z" />
+                  </svg>
+                </span>
+
+                {/* Sıralama ikonu */}
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "4px",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg
+                    width={10}
+                    height={10}
+                    fill="#555"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 320 512"
+                  >
+                    <path d="M160 144L32 272h256L160 144zM160 368l128-128H32l128 128z" />
+                  </svg>
+                </span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[1, 2, 3].map((rowIndex) => (
+            <tr key={rowIndex}>
+              {columns.map((col) => (
+                <td
+                  key={col.id}
+                  style={{
                     padding: "8px",
-                    boxSizing: "border-box",
-                    borderRight: "1px solid #ccc",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    minWidth: `${col.minWidth}px`,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    backgroundColor: "#e0e0e0",
+                    borderRight: "1px solid #ccc",
+                    borderBottom: "1px solid #ccc",
                   }}
                 >
-                  {column.label}
-                  {(column.id === "col2" || column.id === "col4") && (
-                    <div
-                      ref={(el) => (filterIconRefs.current[column.id] = el)}
-                      onClick={() => handleFilterClick(column.id)}
-                    >
-                      <svg
-                        width={20}
-                        height={20}
-                        fill="#555"
-                        style={{ right: 20 }}
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                      >
-                        <path d="M3.9 54.9C10.5 40.9 24.5 32 40 32l432 0c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9 320 448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6l0-79.1L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-              </ResizableBox>
-            ))}
-          </div>
-          {/* Body */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {[1, 2, 3].map((row, rowIndex) => (
-              <div
-                key={rowIndex}
-                style={{
-                  display: "flex",
-                  borderBottom: "1px solid rgb(204,204,204)",
-                }}
-              >
-                {columns.map((column) => (
-                  <div
-                    key={column.id}
-                    style={{
-                      width: column.width,
-                      padding: "8px",
-                      boxSizing: "border-box",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    Row {row} - {column.label}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      {dropdownVisible && (
-        <div
-          ref={dropdownRef}
-          style={{
-            position: "absolute",
-            top: dropdownPosition.top + window.scrollY,
-            left: dropdownPosition.left,
-            backgroundColor: "white",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-            border: "1px solid #ccc",
-            padding: "8px",
-            zIndex: 1000,
-          }}
-        >
-          {dropdownVisible === "col2" && (
-            <>
-              <div>
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={(e) =>
-                      handleCheckboxChange1("Tümünü Seç", e.target.checked)
-                    }
-                    checked={isAllSelected1}
-                  />
-                  Tümünü Seç
-                </label>
-              </div>
-              {availableFilters1.map((filter) => (
-                <div key={filter}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      onChange={(e) =>
-                        handleCheckboxChange1(filter, e.target.checked)
-                      }
-                      checked={filters1.includes(filter)}
-                    />
-                    {filter}
-                  </label>
-                </div>
+                  Row {rowIndex + 1} - {col.label}
+                </td>
               ))}
-            </>
-          )}
-          {dropdownVisible === "col4" && (
-            <>
-              <div>
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={(e) =>
-                      handleCheckboxChange2("Tümünü Seç", e.target.checked)
-                    }
-                    checked={isAllSelected2}
-                  />
-                  Tümünü Seç
-                </label>
-              </div>
-              {availableFilters2.map((filter) => (
-                <div key={filter}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      onChange={(e) =>
-                        handleCheckboxChange2(filter, e.target.checked)
-                      }
-                      checked={filters2.includes(filter)}
-                    />
-                    {filter}
-                  </label>
-                </div>
-              ))}
-            </>
-          )}
-        </div>
-      )}
-    </>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
-export default Resized4;
+export default Resized5;
